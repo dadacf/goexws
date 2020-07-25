@@ -1,11 +1,12 @@
 package binance
 
 import (
-	"github.com/nntaoli-project/goex"
 	"log"
 	"testing"
 	"time"
 	"unsafe"
+
+	"github.com/nntaoli-project/goex"
 )
 
 var bnWs = NewSpotWs()
@@ -38,10 +39,10 @@ func printfKline(kline *goex.Kline, period int) {
 	log.Println("kline:", kline)
 }
 
-func TestBinanceWs_SubscribeTicker(t *testing.T) {
-	bnWs.SubscribeTicker(goex.BTC_USDT)
-	time.Sleep(time.Second * 5)
-}
+// func TestBinanceWs_SubscribeTicker(t *testing.T) {
+// 	bnWs.SubscribeTicker(goex.BTC_USDT)
+// 	time.Sleep(time.Second * 5)
+// }
 
 func TestBinanceWs_GetDepthWithWs(t *testing.T) {
 	bnWs.SubscribeDepth(goex.BTC_USDT, 5)

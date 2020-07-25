@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	. "github.com/nntaoli-project/goex"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	. "github.com/nntaoli-project/goex"
 )
 
 type FuturesWs struct {
@@ -126,6 +127,7 @@ func (ws *FuturesWs) getContractAliasAndCurrencyPairFromInstrumentId(instrumentI
 }
 
 func (ws *FuturesWs) handle(channel string, data json.RawMessage) error {
+	fmt.Println(string(data))
 	var (
 		err           error
 		ch            string

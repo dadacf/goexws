@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	. "github.com/nntaoli-project/goex"
 	"strings"
 	"sync"
 	"time"
+
+	. "github.com/nntaoli-project/goex"
 )
 
 type FuturesWs struct {
@@ -56,6 +57,8 @@ func (ws *FuturesWs) DepthCallback(call func(depth *Depth)) {
 func (ws *FuturesWs) KlineCallback(call func(*FutureKline, int, string)) {
 	ws.klineCallback = call
 }
+
+// 订阅 Market Detail 数据
 func (ws *FuturesWs) SubscribeTicker(pair CurrencyPair, contract string) error {
 	if ws.tickerCallback == nil {
 		return errors.New("please set ticker callback func")
@@ -65,6 +68,8 @@ func (ws *FuturesWs) SubscribeTicker(pair CurrencyPair, contract string) error {
 		"sub": fmt.Sprintf("market.%s_%s.detail", pair.CurrencyA.Symbol, ws.adaptContractSymbol(contract))})
 }
 
+// 订阅Market Depth增量数据
+// 支持大小写， 交易对,"BTC_CW"表示BTC当周合约，"BTC_NW"表示BTC次周合约，"BTC_CQ"表示BTC当季合约, "BTC_NQ"表示BTC次季度合约
 func (ws *FuturesWs) SubscribeDepth(pair CurrencyPair, size int, contract string) error {
 	if ws.depthCallback == nil {
 		return errors.New("please set depth callback func")
@@ -74,10 +79,22 @@ func (ws *FuturesWs) SubscribeDepth(pair CurrencyPair, size int, contract string
 		"sub": fmt.Sprintf("market.%s_%s.depth.size_20.high_freq", pair.CurrencyA.Symbol, ws.adaptContractSymbol(contract))})
 }
 
+// 获取K线数据
 func (ws *FuturesWs) SubscribeKline(pair CurrencyPair, period int, contractType string) error {
+	if ws.klineCallback == nil {
+		return errors.New("please set kline callback func")
+	}
+	periodS, isOk := _INERNAL_KLINE_PERIOD_CONVERTER[period]
+	if isOk != true {
+		periodS = "1min"
+	}
+	return ws.subscribe(map[string]interface{}{
+		"id":  "futures.kline",
+		"sub": fmt.Sprintf("market.%s_%s.kline.%s", pair.CurrencyA.Symbol, ws.adaptContractSymbol(contractType), periodS)})
 	return nil
 }
 
+// 订阅交易单
 func (ws *FuturesWs) SubscribeTrade(pair CurrencyPair, contract string) error {
 	if ws.tradeCallback == nil {
 		return errors.New("please set trade callback func")
@@ -100,6 +117,7 @@ func (ws *FuturesWs) connectWs() {
 }
 
 func (ws *FuturesWs) handle(msg []byte) error {
+	// fmt.Println(string(msg))
 	//心跳
 	if bytes.Contains(msg, []byte("ping")) {
 		pong := bytes.ReplaceAll(msg, []byte("ping"), []byte("pong"))
@@ -166,7 +184,26 @@ func (ws *FuturesWs) handle(msg []byte) error {
 		ws.tickerCallback(&ticker)
 		return nil
 	}
-
+	if strings.Contains(resp.Ch, ".kline") {
+		var kinfoResp DetailResponse
+		err := json.Unmarshal(resp.Tick, &kinfoResp)
+		if err != nil {
+			return err
+		}
+		ws.klineCallback(&FutureKline{
+			Kline: &Kline{
+				Pair:      pair,
+				Open:      kinfoResp.Open,
+				Close:     kinfoResp.Close,
+				High:      kinfoResp.High,
+				Low:       kinfoResp.Low,
+				Vol:       kinfoResp.Amount,
+				Timestamp: resp.Ts,
+			},
+			Vol2: 1,
+		}, 1, contract)
+		return nil
+	}
 	//logger.Errorf("[%s] unknown message, msg=%s", ws.wsConn.WsUrl, string(msg))
 
 	return nil

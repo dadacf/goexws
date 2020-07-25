@@ -1,9 +1,9 @@
 package goexws
 
 import (
-	"github.com/goex-top/goexws/binance"
-	"github.com/goex-top/goexws/huobi"
-	"github.com/goex-top/goexws/okex"
+	"github.com/xiaozhun/goexws/binance"
+	"github.com/xiaozhun/goexws/huobi"
+	"github.com/xiaozhun/goexws/okex"
 )
 
 func SpotBuild(ex string) SpotWsApi {
