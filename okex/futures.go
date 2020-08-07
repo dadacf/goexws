@@ -64,7 +64,7 @@ func (ws *FuturesWs) getChannelName(currencyPair CurrencyPair, contractType stri
 		contractId = fmt.Sprintf("%s-SWAP", currencyPair.ToSymbol("-"))
 	} else {
 		prefix = "futures"
-		//contractId = ws.base.OKExFuture.GetFutureContractId(currencyPair, contractType)
+		// contractId = ws.base.OKExFuture.GetFutureContractId(currencyPair, contractType)
 		//logger.Info("contractid=", contractId)
 	}
 
