@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	. "github.com/nntaoli-project/goex"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	. "github.com/nntaoli-project/goex"
 )
 
 type SpotWs struct {
@@ -211,7 +212,7 @@ func (ws *SpotWs) handle(ch string, data json.RawMessage) error {
 				tm, _ := time.Parse(time.RFC3339, k.Candle[0])
 				ws.klineCallback(&Kline{
 					Pair:      pair,
-					Timestamp: tm.Unix(),
+					Timestamp: tm.Unix() * 1000,
 					Open:      ToFloat64(k.Candle[1]),
 					Close:     ToFloat64(k.Candle[4]),
 					High:      ToFloat64(k.Candle[2]),

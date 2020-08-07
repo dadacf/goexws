@@ -34,7 +34,7 @@ func WsHeYueDepthinfo(depth *goex.Depth) {
 }
 func GetDeptInfo() {
 	fmt.Println("Hello, World!")
-	api := SpotBuild(Spot_Huobi)
+	api := SpotBuild(Spot_OKEx)
 	api.DepthCallback(WsSpotDepthinfo)
 	err := api.SubscribeDepth(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN)
 	if err != nil {
@@ -50,7 +50,7 @@ func GetDeptInfo() {
 // 获取现货K
 func GetKlineInfo() {
 	fmt.Println("Hello, World!")
-	api := SpotBuild(Spot_Huobi)
+	api := SpotBuild(Spot_OKEx)
 	api.KlineCallback(WsSpotKlineinfo)
 	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN)
 	if err != nil {
@@ -66,9 +66,9 @@ func GetKlineInfo() {
 // 获取合约K
 func GetHYKlineInfo() {
 	fmt.Println("Hello, World!")
-	api := FuturesBuild(Futures_OKEx)
+	api := FuturesBuild(Futures_Huobi)
 	api.KlineCallback(WsHeYueKlineinfo)
-	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN, goex.QUARTER_CONTRACT)
+	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN, goex.BI_QUARTER_CONTRACT)
 	if err != nil {
 		panic(err)
 	}

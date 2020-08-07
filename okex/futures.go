@@ -198,7 +198,7 @@ func (ws *FuturesWs) handle(channel string, data json.RawMessage) error {
 					Pair:      pair,
 					High:      ToFloat64(t.Candle[2]),
 					Low:       ToFloat64(t.Candle[3]),
-					Timestamp: ts.Unix(),
+					Timestamp: ts.Unix() * 1000,
 					Open:      ToFloat64(t.Candle[1]),
 					Close:     ToFloat64(t.Candle[4]),
 					Vol:       ToFloat64(t.Candle[5]),
