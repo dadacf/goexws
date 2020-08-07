@@ -50,7 +50,7 @@ func GetDeptInfo() {
 // 获取现货K
 func GetKlineInfo() {
 	fmt.Println("Hello, World!")
-	api := SpotBuild(Spot_Huobi)
+	api := SpotBuild(Spot_OKEx)
 	api.KlineCallback(WsSpotKlineinfo)
 	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN)
 	if err != nil {
