@@ -7,6 +7,6 @@ import (
 func main() {
 	// fmt.Println("Hello, World!")
 	// goexws.GetDeptInfo()
-	goexws.GetKlineInfo()
-	// goexws.GetHYKlineInfo()
+	// goexws.GetKlineInfo()
+	goexws.GetHYKlineInfo()
 }
