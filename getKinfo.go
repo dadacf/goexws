@@ -66,9 +66,10 @@ func GetKlineInfo() {
 // 获取合约K
 func GetHYKlineInfo() {
 	fmt.Println("Hello, World!")
-	api := FuturesBuild(Swap_OKEx)
+	api := FuturesBuild(Futures_OKEx)
 	api.KlineCallback(WsHeYueKlineinfo)
-	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN, goex.SWAP_CONTRACT)
+	fmt.Println("1111!")
+	err := api.SubscribeKline(goex.BTC_USDT, goex.KLINE_PERIOD_1MIN, goex.THIS_WEEK_CONTRACT)
 	if err != nil {
 		panic(err)
 	}
